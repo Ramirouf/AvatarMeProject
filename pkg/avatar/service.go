@@ -10,27 +10,24 @@ const (
 	strider = 10
 )
 /*
-func hash(s string) uint32 {
-        h := fnv.New32a()
-        h.Write([]byte(s))
-        return h.Sum32()
-}
-func main() {
-	fmt.Println(hash("test"))
-	fmt.Println(hash("tesl"))
-
-}
-*/
-/*
 func DefaultAvatarGeneration (name string) string {
 	return fmt.Sprintf("http://www.gravatar.com/avatar/%x?s=%d",
 		hash(name), defaultWidth)
 }
 */
-func DefaultAvatarGeneration () *GeneratorOne {
+
+// DefaultAvatarGenerator provides a Generator that generates an image hashing the Information
+// with MD5 and saving the image with a ColorEngine
+func DefaultAvatarGenerator () *GeneratorOne {
 	return &GeneratorOne{
 		encoder: &encoder.MD5Encoder{},
 		generator: images.NewDrawer(images.NewDefaultColorEngine(), defaultLength, defaultWidth),
+	}
+}
+func CustomGenerator(cryptoEncoder cryptoEncoder, generator imageGenerator) *GeneratorOne {
+	return &GeneratorOne{
+		encoder: cryptoEncoder,
+		generator: generator,
 	}
 }
 // cryptoEncoder encodes information
@@ -47,7 +44,7 @@ type Service struct {
 	encoder cryptoEncoder //No le interesa cómo cryptoEncoder codifica el hash
 	generator imageGenerator
 }
-
+// Information 
 type Information struct {
 	//Info to encode
 	Name string
@@ -63,7 +60,7 @@ FUNC (S *GeneratorOne) GenerateAndSaveAvatar (information Information) error {
 	if err != nil {
 		return err
 	}
-	fmt.Fprintln("Avatar generated and saved, related to %s", information.name)")
+	fmt.Fprintln("Avatar generated and saved, related to %s", information.name)
 	return nil
 	
 }
