@@ -2,60 +2,52 @@ package avatar
 
 import (
 	"fmt"
-	"hash/fnv"
 )
-const (
-	defaultWidth = 200
-	defaultLength = 200
-	strider = 10
-)
-/*
-func DefaultAvatarGeneration (name string) string {
-	return fmt.Sprintf("http://www.gravatar.com/avatar/%x?s=%d",
-		hash(name), defaultWidth)
-}
-*/
 
-// DefaultAvatarGenerator provides a Generator that generates an image hashing the Information
-// with MD5 and saving the image with a ColorEngine
-func DefaultAvatarGenerator () *GeneratorOne {
-	return &GeneratorOne{
-		encoder: &encoder.MD5Encoder{},
-		generator: images.NewDrawer(images.NewDefaultColorEngine(), defaultLength, defaultWidth),
-	}
-}
-func CustomGenerator(cryptoEncoder cryptoEncoder, generator imageGenerator) *GeneratorOne {
-	return &GeneratorOne{
-		encoder: cryptoEncoder,
-		generator: generator,
-	}
-}
-// cryptoEncoder encodes information
+// cryptoEncoder encodes information.
 type cryptoEncoder interface {
 	EncodeInformation(strInformation string) (encodedInformation []byte, err error)
 }
-// imageGenerator makes images
+
+// imageGenerator makes images.
 type imageGenerator interface {
-	BuildAndSaveImage (encodedInformation []byte) error
+	BuildAndSaveImage(encodedInformation []byte) error
 }
-// Service contains functionalities to generate avatars... it's a generator
+
+
+// Service contains functionalities to generate avatars... it's a generator.
 type Service struct {
-	//Aislamos las interfaces / desacoplamos las implementaciones
-	encoder cryptoEncoder //No le interesa cómo cryptoEncoder codifica el hash
+	//Services isolates the implementation of the interfaces
+	encoder cryptoEncoder //Doesn't matter how the encoder hashes the information
 	generator imageGenerator
 }
+
+
 // Information 
 type Information struct {
 	//Info to encode
-	Name string
+	name string
 }
+func AvatarGenerator() *Service {
+	return &Service{
+		encoder: &encoder.MD5Encoder{},
+		generator: images.Pipe{},
+	}
+}
+//This method "GenerateAndSaveAvatar" is used to generate the avatar
+//It has a receiver of type Service named "s"
+//Now, "s" is a pointer to a Service, which will have this following method
+// GenerateAndSaveAvatar is a constructor that generates the avatar
 
-FUNC (S *GeneratorOne) GenerateAndSaveAvatar (information Information) error {
+func (s *Service) GenerateAndSaveAvatar (information Information) error {
 	//All logic is here
+
+	//Information encoded... then it's saved in encodedBytes
 	encodedBytes, err :=  s.encoder.EncodeInformation(information.name)
 	if err != nil {
 		return err
 	}
+	//Using encodedBytes, we generate the avatar
 	err = s.generator.BuildAndSaveImage(encodedBytes)
 	if err != nil {
 		return err
