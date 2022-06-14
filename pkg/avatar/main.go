@@ -36,7 +36,7 @@ func main() {
 	encoder := encoder.MD5Encoder{}
 	hash, _ :=  s.encoder.EncodeInformation(*name)
     identicon := images.SetHash(hash)
-
+	
     // Pass in the identicon, call the methods which you want to transform
     identicon = images.Pipe(identicon, images.PickColor, images.BuildGrid,
 		 images.FilterOddSquares, images.BuildPixelMap)

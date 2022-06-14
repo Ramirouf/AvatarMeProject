@@ -11,7 +11,7 @@ type cryptoEncoder interface {
 
 // imageGenerator makes images.
 type imageGenerator interface {
-	BuildAndSaveImage(encodedInformation []byte) error
+	GenerateAndSaveImage(encodedInformation []byte) error
 }
 
 

@@ -1,2 +1,4 @@
 1- be able to execute the identicon from another file. DONE !!!
 2- Replace the built-in hasher in image with the one i made
+
+1) Interfaz en images/service.go para generar y guardar la imagen

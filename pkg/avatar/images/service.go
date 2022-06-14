@@ -1,10 +1,13 @@
-package images
+package main
 
 import (
 	"image"
 	"image/color"
 	//"crypto/md5"
 	"github.com/llgcode/draw2d/draw2dimg"
+    "crypto/md5"
+    "fmt"
+    "flag"
 )
 
 type Identicon struct {
@@ -171,18 +174,47 @@ func Pipe(identicon Identicon, funcs ...Apply) Identicon {
 }
 
 type buildImage interface {
-    Apply(Identicon) Identicon
+    Pipe(Identicon) Identicon
 }
 type SaveBuiltImage interface {
     SaveBuiltImage(Identicon) error
 }
-type GenerateAndSaveImage struct {
+type GenerateAndSaveImageStruct struct {
     buildImage buildImage
     saveBuiltImage SaveBuiltImage
 
 }
+
 /*
-Structure that has a method GenerateAndSave
-parameters like width, height, to allow different sizes of avatars
+Structure that has a method GenerateAndSaveImage
 */
+/*
+func (g *GenerateAndSaveImageStruct) GenerateAndSaveImage(identicon Identicon) error {
+    identicon = g.buildImage.Pipe(identicon)
+    return g.saveBuiltImage.SaveBuiltImage(identicon)
+}
+*/
+//Necesito una interfaz que genere y guarde la imagen
+
+// GenerateAndSaveImage receives a hash, saves the image and returns an error
+func GenerateAndSaveImage(h [16]byte) error {
+    identicon := SetHash(h)
+    identicon = Pipe(identicon, PickColor, BuildGrid, FilterOddSquares, BuildPixelMap)
+    return DrawRectangle(identicon)
+}
+
+/*
+From the main service.go file we execute the function 
+GenerateAndSaveImage... Sending the hash, and it returns 
+an error, which we should handle.
+*/
+
+func main() {
+    var name = flag.String("name", "Ramiroo", "Name of the user")
+
+    hash := md5.Sum([]byte(*name))
+    fmt.Println(hash)
+    GenerateAndSaveImage(hash)
+}
+
 
