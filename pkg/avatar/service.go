@@ -1,9 +1,12 @@
-package avatar
+package main
 
 import (
 	"fmt"
+	"github.com/Ramirouf/AvatarMeProject/pkg/avatar/images"
+	"github.com/Ramirouf/AvatarMeProject/pkg/avatar/encoder"
+	"flag"
 )
-
+/*
 // cryptoEncoder encodes information.
 type cryptoEncoder interface {
 	EncodeInformation(strInformation string) (encodedInformation []byte, err error)
@@ -28,10 +31,11 @@ type Information struct {
 	//Info to encode
 	name string
 }
+
 func AvatarGenerator() *Service {
 	return &Service{
 		encoder: &encoder.MD5Encoder{},
-		generator: images.Pipe{},
+		generator: images.GenerateAndSaveImage,
 	}
 }
 //This method "GenerateAndSaveAvatar" is used to generate the avatar
@@ -55,4 +59,14 @@ func (s *Service) GenerateAndSaveAvatar (information Information) error {
 	fmt.Fprintln("Avatar generated and saved, related to %s", information.name)
 	return nil
 	
+}
+*/
+func main() {
+    var name = flag.String("name", "Ramiro", "Text to hash")
+
+    encoder := encoder.MD5Encoder{}
+    hash, _ := encoder.EncodeInformation(*name)
+
+    fmt.Println(hash)
+	images.GenerateAndSaveImage(hash)
 }

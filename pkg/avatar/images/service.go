@@ -1,17 +1,15 @@
-package main
+package images
 
 import (
 	"image"
 	"image/color"
-	//"crypto/md5"
 	"github.com/llgcode/draw2d/draw2dimg"
-    "crypto/md5"
-    "fmt"
-    "flag"
+    //Delete the following:
+    //"crypto/md5"
 )
 
 type Identicon struct {
-	hash	[16]byte //16 byte array containing the hash returned by the encoder
+	hash	[]byte //16 byte array containing the hash returned by the encoder
 	color   [3]byte //3 byte array containing Red, Green and Blue
 	grid       []byte // New property to hold the grid
 	gridPoints []GridPoint // Filtered points in the grid
@@ -20,7 +18,7 @@ type Identicon struct {
 }
 
 // SetHash is like a setter... for the hash property
-func SetHash(input [16]byte) Identicon {
+func SetHash(input []byte) Identicon {
     return Identicon{
         hash: input,
     }
@@ -197,7 +195,7 @@ func (g *GenerateAndSaveImageStruct) GenerateAndSaveImage(identicon Identicon) e
 //Necesito una interfaz que genere y guarde la imagen
 
 // GenerateAndSaveImage receives a hash, saves the image and returns an error
-func GenerateAndSaveImage(h [16]byte) error {
+func GenerateAndSaveImage(h []byte) error {
     identicon := SetHash(h)
     identicon = Pipe(identicon, PickColor, BuildGrid, FilterOddSquares, BuildPixelMap)
     return DrawRectangle(identicon)
@@ -209,12 +207,6 @@ GenerateAndSaveImage... Sending the hash, and it returns
 an error, which we should handle.
 */
 
-func main() {
-    var name = flag.String("name", "Ramiroo", "Name of the user")
 
-    hash := md5.Sum([]byte(*name))
-    fmt.Println(hash)
-    GenerateAndSaveImage(hash)
-}
 
 

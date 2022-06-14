@@ -34,7 +34,7 @@ func main() {
 
 	// Setting the hash attribute of the identicon struct
 	encoder := encoder.MD5Encoder{}
-	hash, _ :=  s.encoder.EncodeInformation(*name)
+	hash, _ :=  encoder.EncodeInformation(*name)
     identicon := images.SetHash(hash)
 	
     // Pass in the identicon, call the methods which you want to transform
