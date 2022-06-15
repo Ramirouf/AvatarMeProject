@@ -79,24 +79,30 @@ type cryptoEncoder interface {
 	EncodeInformation(strInformation string) (encodedInformation []byte, err error)
 }
 
+type imageGenerator interface {
+	GenerateAndSaveImageIdenticon(encodedInformation []byte) error
+}
+
 type Service struct {
 	//Services isolates the implementation of the interfaces
 	encoder cryptoEncoder
-	//generator imageGenerator
+	generator imageGenerator
 }
 
 func AvatarGenerator() *Service {
 	return &Service{
 		encoder: &encoder.MD5Encoder{},
-		//generator: images.GenerateAndSaveImage,
+		//generator: images.GenerateAndSaveImageIdenticon,
+		generator: &images.Identicon{},
 	}
 }
 
 func (s *Service) GenerateAndSaveAvatar () error {
 
-	hash, _ := s.encoder.EncodeInformation("Ramiro11")
+	hash, _ := s.encoder.EncodeInformation("Ramiro11122")
 	//Using encodedBytes, we generate the avatar
-	err := images.GenerateAndSaveImage(hash)
+	err := s.generator.GenerateAndSaveImageIdenticon(hash)
+	//err := images.GenerateAndSaveImage(hash)
 	if err != nil {
 		return err
 	}

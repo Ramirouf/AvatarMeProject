@@ -196,8 +196,8 @@ func (g *GenerateAndSaveImageStruct) GenerateAndSaveImage(identicon Identicon) e
 
 // GenerateAndSaveImage should be a method for an struct
 // GenerateAndSaveImage receives a hash, saves the image and returns an error
-func GenerateAndSaveImage(h []byte) error {
-    identicon := SetHash(h)
+func (i *Identicon) GenerateAndSaveImageIdenticon(encodedInformation []byte) error {
+    identicon := SetHash(encodedInformation)
     identicon = Pipe(identicon, PickColor, BuildGrid, FilterOddSquares, BuildPixelMap)
     return DrawRectangle(identicon)
 }
