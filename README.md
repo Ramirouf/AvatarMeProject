@@ -6,6 +6,6 @@ Imagine, por ejemplo, que está creando una nueva aplicación y desea que todos 
 
 Code to be executed in main.go
 
-info1 := Information{name: "Ramiro111111"}
-service1 := AvatarGenerator()
-service1.GenerateAndSaveAvatar(info1)
+info1 := Information{name: "Ramiro111111"} \
+service1 := AvatarGenerator() \
+service1.GenerateAndSaveAvatar(info1) \
