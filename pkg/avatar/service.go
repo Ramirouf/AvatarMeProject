@@ -12,6 +12,7 @@ func main() {
 	service1 := AvatarGenerator()
 	service1.GenerateAndSaveAvatar(info1)
 }
+
 // cryptoEncoder encodes information.
 type cryptoEncoder interface {
 	EncodeInformation(strInformation string) (encodedInformation []byte, err error)

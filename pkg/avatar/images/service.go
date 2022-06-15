@@ -17,8 +17,8 @@ type Identicon struct {
 
 }
 
-// SetHash is like a setter... for the hash property
-func SetHash(input []byte) Identicon {
+// setHash is like a setter... for the hash property
+func setHash(input []byte) Identicon {
     return Identicon{
         hash: input,
     }
@@ -32,7 +32,7 @@ the same color over and over again. The first value will be Red,
 the second value Green and the third value will be Blue.
 This way we generate a valid RGB value and we can use it together with the color package in go.
 */
-func PickColor(identicon Identicon) Identicon {
+func pickColor(identicon Identicon) Identicon {
     // first we make a byte array with length 3
     rgb := [3]byte{}
     // next we copy the first 3 values from the hash to the rgb array
@@ -45,7 +45,7 @@ func PickColor(identicon Identicon) Identicon {
 
 //Now we have an Identicon which holds a color and the hash
 
-func BuildGrid(identicon Identicon) Identicon {
+func buildGrid(identicon Identicon) Identicon {
     // Create empty grid
     grid := []byte{}
     // Loop over the hash from the identicon
@@ -69,7 +69,7 @@ type GridPoint struct {
 	index int
 }
 
-func FilterOddSquares(identicon Identicon) Identicon {
+func filterOddSquares(identicon Identicon) Identicon {
     grid := []GridPoint{} // create a placeholder to hold the values of the loop
     for i, code := range identicon.grid { // loop over the grid
 	if code%2 == 0 { // check if the value is odd or not
@@ -96,7 +96,7 @@ type DrawingPoint struct {
     bottomRight Point
 }
 
-func BuildPixelMap(identicon Identicon) Identicon {
+func buildPixelMap(identicon Identicon) Identicon {
     drawingPoints := []DrawingPoint{} // define placeholder for drawingpoints
 
     // Closure, this function returns a Drawingpoint
@@ -124,7 +124,7 @@ func BuildPixelMap(identicon Identicon) Identicon {
     return identicon // return the modified identicon
 }
 
-func Rect(img *image.RGBA, col color.Color, x1, y1, x2, y2 float64) {
+func rect(img *image.RGBA, col color.Color, x1, y1, x2, y2 float64) {
     gc := draw2dimg.NewGraphicContext(img) // Prepare new image context
     gc.SetFillColor(col) // set the color
     gc.MoveTo(x1, y1) // move to the topleft in the image
@@ -141,7 +141,7 @@ func Rect(img *image.RGBA, col color.Color, x1, y1, x2, y2 float64) {
     gc.FillStroke()
 }
 
-func DrawRectangle(identicon Identicon) error {
+func drawRectangle(identicon Identicon) error {
     // We create our default image containing a 250x250 rectangle
     var img = image.NewRGBA(image.Rect(0, 0, 250, 250))
     // We retrieve the color from the color property on the identicon
@@ -149,7 +149,7 @@ func DrawRectangle(identicon Identicon) error {
 
     // Loop over the pixelmap and call the rect function with the img, color and the dimensions
     for _, pixel := range identicon.pixelMap {
-	Rect(
+	rect(
             img,
             col,
             float64(pixel.topLeft.x),
@@ -164,7 +164,7 @@ func DrawRectangle(identicon Identicon) error {
 
 type Apply func(Identicon) Identicon
 
-func Pipe(identicon Identicon, funcs ...Apply) Identicon {
+func pipe(identicon Identicon, funcs ...Apply) Identicon {
     for _, applyer := range funcs {
 	identicon = applyer(identicon)
     }
@@ -172,14 +172,14 @@ func Pipe(identicon Identicon, funcs ...Apply) Identicon {
 }
 
 type buildImage interface {
-    Pipe(Identicon) Identicon
+    pipe(Identicon) Identicon
 }
-type SaveBuiltImage interface {
+type saveBuiltImage interface {
     SaveBuiltImage(Identicon) error
 }
-type GenerateAndSaveImageStruct struct {
+type generateAndSaveImageStruct struct {
     buildImage buildImage
-    saveBuiltImage SaveBuiltImage
+    saveBuiltImage saveBuiltImage
 
 }
 
@@ -197,9 +197,9 @@ func (g *GenerateAndSaveImageStruct) GenerateAndSaveImage(identicon Identicon) e
 // GenerateAndSaveImage should be a method for an struct
 // GenerateAndSaveImage receives a hash, saves the image and returns an error
 func (i *Identicon) GenerateAndSaveImageIdenticon(encodedInformation []byte) error {
-    identicon := SetHash(encodedInformation)
-    identicon = Pipe(identicon, PickColor, BuildGrid, FilterOddSquares, BuildPixelMap)
-    return DrawRectangle(identicon)
+    identicon := setHash(encodedInformation)
+    identicon = pipe(identicon, pickColor, buildGrid, filterOddSquares, buildPixelMap)
+    return drawRectangle(identicon)
 }
 
 /*
