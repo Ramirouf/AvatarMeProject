@@ -1,17 +1,10 @@
-package main
+package avatar
 
 import (
 	"fmt"
 	"github.com/Ramirouf/AvatarMeProject/pkg/avatar/images"
 	"github.com/Ramirouf/AvatarMeProject/pkg/avatar/encoder"
 )
-
-func main() {
-
-	info1 := Information{name: "Ramiro111111"}
-	service1 := AvatarGenerator()
-	service1.GenerateAndSaveAvatar(info1)
-}
 
 // cryptoEncoder encodes information.
 type cryptoEncoder interface {

@@ -17,3 +17,8 @@ Pasos:
 
 //Quien consume a la interfaz, es el que lo define
 //Las interfaces se definen en el lugar donde se van a utilizar
+
+Code to be executed in main.go
+info1 := Information{name: "Ramiro111111"}
+service1 := AvatarGenerator()
+service1.GenerateAndSaveAvatar(info1)
