@@ -194,6 +194,7 @@ func (g *GenerateAndSaveImageStruct) GenerateAndSaveImage(identicon Identicon) e
 */
 //Necesito una interfaz que genere y guarde la imagen
 
+// GenerateAndSaveImage should be a method for an struct
 // GenerateAndSaveImage receives a hash, saves the image and returns an error
 func GenerateAndSaveImage(h []byte) error {
     identicon := SetHash(h)
