@@ -71,8 +71,9 @@ func main() {
     fmt.Println(hash)
 	images.GenerateAndSaveImage(hash)
 	*/
+	info1 := Information{name: "Ramiro111"}
 	service1 := AvatarGenerator()
-	service1.GenerateAndSaveAvatar()
+	service1.GenerateAndSaveAvatar(info1)
 }
 
 type cryptoEncoder interface {
@@ -96,16 +97,21 @@ func AvatarGenerator() *Service {
 		generator: &images.Identicon{},
 	}
 }
+// Information struct, which contains the information to encode.
 
-func (s *Service) GenerateAndSaveAvatar () error {
+type Information struct {
+	name string
+}
 
-	hash, _ := s.encoder.EncodeInformation("Ramiro11122")
+func (s *Service) GenerateAndSaveAvatar (info Information) error {
+
+	hash, _ := s.encoder.EncodeInformation(info.name)
 	//Using encodedBytes, we generate the avatar
 	err := s.generator.GenerateAndSaveImageIdenticon(hash)
 	//err := images.GenerateAndSaveImage(hash)
 	if err != nil {
 		return err
 	}
-	fmt.Println("Avatar generated and saved, related to %s", "Ramiro1")
+	fmt.Println("Avatar generated and saved, related to %s", info.name)
 	return nil
 }
